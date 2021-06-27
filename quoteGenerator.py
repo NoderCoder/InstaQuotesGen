@@ -1,15 +1,26 @@
+from os import PRIO_PGRP
 import quoteList
+from PIL import Image, ImageDraw, ImageFont
 
 totalQuotes = len(quoteList.singleQuoteList)
+index = 0
 
 
-from PIL import Image, ImageDraw, ImageFont
+for x in quoteList.singleQuoteList:
+    if x[2] == "age":
+        print(x)
+    else:
+        break
+    print(index)
+    index = index + 1
+
+
 # Blank Image 
 img = Image.new('RGB', (612, 612), color = (255, 255, 255))
 
 
 #Staging the quotes for the inputSentence
-sentence = quoteList.singleQuoteList[1][0] + "-" + quoteList.singleQuoteList[1][1]
+sentence = quoteList.singleQuoteList[index][0] + "-" + quoteList.singleQuoteList[index][1]
 inputSentence = sentence
 
 #fonts
@@ -50,8 +61,6 @@ for letter in inputSentence:
       fresh_sentence += letter
   incrementer+=1
 
-print (fresh_sentence)
-
 #render the text in the center of the box
 dim = d.textsize(fresh_sentence, font=fnt)
 textWidth = dim[0]
@@ -64,13 +73,16 @@ textHeightPos = (imgHeight/2.7-textHeight/2)
 #prevent inputSentence clipping
 if(textHeightPos < 30):
     textHeightPos = 30
-
-
-print(imgHeight, imgWidth, textWidth, textHeight, textWidthPos, textHeightPos )
 d.text((textWidthPos,textHeightPos), fresh_sentence ,align="center",  font=fnt, fill=(0,0,0,0))
 # Saving the file
-img.save('/Users/Mantra/InstaQuotesGenerator/Output/age/Age'+ 'test' + '.png')
+saveLink = '/Users/Mantra/InstaQuotesGenerator/Output/age/Age',index,'.png'
+
+
+img.save('/Users/Mantra/InstaQuotesGenerator/Output/age/Age'+ str(index)+'.png')
+
+
+
 print(totalQuotes)
-print(quoteList.singleQuoteList[75970][2])
+print(quoteList.singleQuoteList[75969][2])
 print("Its working for now")
 
