@@ -2,13 +2,13 @@
 
 #reading the quote file
 quoteFile = open('/Users/Mantra/InstaQuotesGenerator/QuoteFile/QuotesFile.txt')
-line = quoteFile.read().replace("\n", "*")
+line = quoteFile.read().replace("\n", "***")
 quoteList = []
 tempSingleQuoteList =[]
 singleQuoteList = []
 print("Print start")
 #split the text at the *
-quoteList = line.split('*')
+quoteList = line.split('***')
 # perform removal of blanks form quote list
 while("" in quoteList) :
     quoteList.remove("")

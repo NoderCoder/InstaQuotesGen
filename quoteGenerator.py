@@ -5,12 +5,17 @@ from PIL import Image, ImageDraw, ImageFont
 # Blank Image 
 img = Image.new('RGB', (612, 612), color = (255, 255, 255))
 
+# variables
 totalQuotes = len(quoteList.singleQuoteList)
 index = 0
+genre = quoteList.singleQuoteList[index][2]
+
+print(genre)
+
 
 #loop code
 for x in quoteList.singleQuoteList:
-    if x[2] == "age":
+    if x[2] == genre:
         #Staging the quotes for the inputSentence
         sentence = quoteList.singleQuoteList[index][0] + "-" + quoteList.singleQuoteList[index][1]
         inputSentence = sentence
@@ -69,7 +74,7 @@ for x in quoteList.singleQuoteList:
             textHeightPos = 30
         d.text((textWidthPos,textHeightPos), fresh_sentence ,align="center",  font=fnt, fill=(0,0,0,0))
         # Saving the file
-        img.save('/Users/Mantra/InstaQuotesGenerator/Output/age/Age'+ str(index)+'.png')
+        # img.save('/Users/Mantra/InstaQuotesGenerator/Output/age/Age'+ str(index)+'.png')
 
 
     else:
