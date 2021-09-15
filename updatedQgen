@@ -1,0 +1,170 @@
+from tkinter import *
+from datetime import datetime
+from os import *
+from PIL import Image, ImageDraw, ImageFont
+
+
+
+#=============Functions
+#
+
+
+# Creating image
+def createImage():
+    inputQuote=inputTextBox.get("1.0","end-1c")
+    author = quoteAuthorName.get()
+    outputPathAdress = outputPath.get()
+
+    sentence = inputQuote +"-" + author
+    inputSentence = sentence
+
+    #fonts
+    # fnt = ImageFont.truetype('C:/Users/sutarim/Toolbox/QuoteCreator/Fonts/Cinzel-VariableFont_wght.ttf', 70)
+    fnt = ImageFont.truetype('C:/Users/sutarim/Toolbox/QuoteCreator/Fonts/Benne-Regular.ttf', 70)
+
+    #image background
+    greenBackground = Image.open('C:/Users/sutarim/Toolbox/QuoteCreator/Background/Green.jpg')
+    img = greenBackground
+    #variables for image size
+    imgWidth , imgHeight = img.size
+    d = ImageDraw.Draw(img)
+
+    #find the average size of the letter
+    sum = 0
+    for letter in inputSentence:
+        sum += d.textsize(letter, font=fnt)[0]
+
+    average_length_of_letter = sum/len(inputSentence)
+
+    #find the number of letters to be put on each line
+    number_of_letters_for_each_line = (imgWidth/1.618)/average_length_of_letter
+    incrementer = 0
+    fresh_sentence = ''
+
+    #add some line breaks
+    for letter in inputSentence:
+        if(letter == '-'):
+            fresh_sentence += '\n\n' + letter
+        elif(incrementer < number_of_letters_for_each_line):
+            fresh_sentence += letter
+        else:
+            if(letter == ' '):
+                fresh_sentence += '\n'
+                incrementer = 0
+            else:
+                fresh_sentence += letter
+        incrementer+=1
+    
+    #render the text in the center of the box
+    dim = d.textsize(fresh_sentence, font=fnt)
+    textWidth = dim[0]
+    textHeight = dim[1]
+
+    #Positions are refrenced from top left corner
+    textWidthPos = (imgWidth/2 - textWidth/2)
+    #adjusting so that text starts a little above the center
+    textHeightPos = (imgHeight/2.7-textHeight/2) 
+    #prevent inputSentence clipping
+    if(textHeightPos < 30):
+        textHeightPos = 30
+    
+    d.text((textWidthPos,textHeightPos), fresh_sentence ,align="center",  font=fnt, fill=(0,0,0,0))
+    
+    # configuring file name 
+    now = datetime.now()
+    currentDateTimeString = now.strftime("%H:%M:%S")
+    imageName= currentDateTimeString
+
+    # this is not working, will need ot finda  way to save the image with at time stamp
+    imageSavePath = "C:/Users/sutarim/Toolbox/QuoteCreator/Output/" +imageName+ " create.png" 
+
+
+
+    # Saving the file
+    # img.save("C:/Users/sutarim/Toolbox/QuoteCreator/Output/create.png")
+    img.save("tester.png")
+
+
+
+
+
+
+
+
+# function to get the radiobuttion selection and returns a string that was selected
+def radioButtonImgSelector():
+    radioButtonSelection = str(radioButtonStrVar.get())
+    print("You selected the option " + radioButtonSelection)
+
+# function to retrive the text from the text box
+def retrieve_input():
+    inputQuote=inputTextBox.get("1.0","end-1c")
+    author = quoteAuthorName.get()
+    outputPathAdress = outputPath.get()
+    print(inputQuote + " " + author + " " + outputPathAdress )
+
+master = Tk()
+radioButtonStrVar = StringVar()
+quoteAuthorName = StringVar()
+outputPath = StringVar()
+# sizing the master
+master.maxsize(500,500)
+master.minsize(500,500)
+master.title('Testing the code')
+
+#Adding Label Frame and then adding the radio buttons
+frame1 = LabelFrame(master, text="Select the background", height=50)
+frame1.pack()
+
+#radio buttons
+radioButtonBlue = Radiobutton(frame1, text="Blue", variable=radioButtonStrVar, value= "Blue", command=radioButtonImgSelector)
+#radioButtonBlue.select()
+radioButtonBlue.pack(anchor = W)
+
+radioButtonGreen = Radiobutton(frame1, text="Green", variable=radioButtonStrVar, value= "Green", command=radioButtonImgSelector )
+radioButtonGreen.select()
+radioButtonGreen.pack(anchor = W)
+
+radioButtonRed = Radiobutton(frame1, text="Red", variable=radioButtonStrVar, value= "Red", command=radioButtonImgSelector)
+radioButtonRed.pack(anchor = W)
+
+radioButtonYellow = Radiobutton(frame1, text="Yellow", variable=radioButtonStrVar, value= "Yellow", command=radioButtonImgSelector)
+radioButtonYellow.pack(anchor = W)
+
+radioButtonOrange = Radiobutton(frame1, text="Orange", variable=radioButtonStrVar, value= "Orange", command=radioButtonImgSelector)
+radioButtonOrange.pack(anchor = W)
+
+# frame for multiline input
+frame2 = LabelFrame(master, text="Insert the multiline value", height=100, width=400)
+frame2.pack()
+
+#text box for Quote
+inputTextBox = Text(frame2, height=6, width= 50, bg="light yellow")
+inputTextBox.pack()
+defaultQuoteTextDisplay = "Enter or copy/paste the quote"
+
+# frame for multiline input
+frame3 = LabelFrame(master, text="Insert the Author name", height=100, width=400)
+frame3.pack()
+
+#entrybox for author
+authorEntryBox = Entry(frame3,width=50,  textvariable=quoteAuthorName, bg= "light yellow")
+authorEntryBox.pack()
+
+# frame for multiline input
+frame4 = LabelFrame(master, text="Insert the output folder path", height=100, width=400)
+frame4.pack()
+
+#entrybox for Destination folder
+outputEntryBox = Entry(frame4,width=50,  textvariable=outputPath, bg= "light yellow")
+outputEntryBox.pack()
+
+buttonCommit=Button(master, height=2, width=10, text="Create",command=lambda: createImage())
+#command=lambda: retrieve_input() >>> just means do this when i press the button
+buttonCommit.pack()
+
+buttonExit=Button(master, height=2, width=10, text="Exit",command= master.destroy)
+#command=lambda: retrieve_input() >>> just means do this when i press the button
+buttonExit.pack()
+
+master.mainloop()
